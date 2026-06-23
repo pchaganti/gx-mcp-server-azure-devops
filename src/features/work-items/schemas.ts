@@ -71,6 +71,7 @@ export const CreateWorkItemSchema = z.object({
     .number()
     .optional()
     .describe('The ID of the parent work item to create a relationship with'),
+  tags: z.array(z.string()).optional().describe('Tags to add to the work item'),
   additionalFields: z
     .record(z.string(), z.any())
     .optional()
@@ -108,6 +109,18 @@ export const UpdateWorkItemSchema = z.object({
     .optional()
     .describe('The updated priority of the work item'),
   state: z.string().optional().describe('The updated state of the work item'),
+  tags: z
+    .array(z.string())
+    .optional()
+    .describe('Overwrite/set the complete set of tags'),
+  tagsToAdd: z
+    .array(z.string())
+    .optional()
+    .describe('List of tags to append to the work item'),
+  tagsToRemove: z
+    .array(z.string())
+    .optional()
+    .describe('List of tags to remove from the work item'),
   additionalFields: z
     .record(z.string(), z.any())
     .optional()
@@ -146,4 +159,30 @@ export const ManageWorkItemLinkSchema = z.object({
     .string()
     .optional()
     .describe('Optional comment explaining the link'),
+});
+
+/**
+ * Schema for getting work item comments
+ */
+export const GetWorkItemCommentsSchema = z.object({
+  workItemId: z.number().describe('The ID of the work item'),
+  projectId: z.string().optional().describe('The ID or name of the project'),
+  top: z.number().optional().describe('Maximum number of comments to return'),
+  continuationToken: z
+    .string()
+    .optional()
+    .describe('Continuation token to retrieve the next page of comments'),
+  includeDeleted: z.boolean().optional().describe('Include deleted comments'),
+  expand: z
+    .enum(['none', 'reactions', 'renderedText', 'all'])
+    .optional()
+    .default('all')
+    .describe(
+      'The level of detail to include in the comments response (Default: "all")',
+    ),
+  order: z
+    .enum(['asc', 'desc'])
+    .optional()
+    .default('asc')
+    .describe('The order in which to sort the comments (Default: "asc")'),
 });
