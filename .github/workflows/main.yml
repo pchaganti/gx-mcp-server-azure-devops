@@ -4,6 +4,9 @@ on:
   pull_request_target:
     branches: [main]
     types: [opened, synchronize, reopened]
+    paths-ignore:
+      - '.agents/**'
+      - 'skills-lock.json'
 
 permissions:
   contents: read
@@ -24,6 +27,8 @@ jobs:
             code:
               - '**'
               - '!**/*.md'
+              - '!.agents/**'
+              - '!skills-lock.json'
 
   test:
     needs: changes
